@@ -47,3 +47,4 @@ C:\Users\CT_USER.CIT-IT-PC-0121\source\repos\BookStoreApi\BookStoreApi\bin\Debug
 C:\Users\CT_USER.CIT-IT-PC-0121\source\repos\BookStoreApi\BookStoreApi\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\CT_USER.CIT-IT-PC-0121\source\repos\BookStoreApi\BookStoreApi\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\CT_USER.CIT-IT-PC-0121\source\repos\BookStoreApi\BookStoreApi\obj\Debug\net10.0\BookStoreApi.sourcelink.json
+C:\Users\CT_USER.CIT-IT-PC-0121\source\repos\BookStoreApi\BookStoreApi\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
