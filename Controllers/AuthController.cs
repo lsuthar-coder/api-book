@@ -13,6 +13,7 @@ namespace BookStoreApi.Controllers;
 [Route("api/auth")]
 public sealed class AuthController(
     UsersService usersService,
+    BooksService booksService,
     IConfiguration configuration) : ControllerBase
 {
     [HttpPost("register")]
@@ -31,8 +32,9 @@ public sealed class AuthController(
             return Conflict(new { message = "A user with this email already exists." });
         }
 
-        var user = await usersService.CreateAsync(request.Name, request.Email, request.Password);
-        return StatusCode(StatusCodes.Status201Created, new UserResponse(user.Name, user.Email, user.Role));
+        var role = !string.IsNullOrWhiteSpace(request.Role) ? request.Role : "user";
+        var user = await usersService.CreateAsync(request.Name, request.Email, request.Password, role);
+        return StatusCode(StatusCodes.Status201Created, new { token = CreateToken(user), user = new UserResponse(user.Id, user.Name, user.Email, user.Role) });
     }
 
     [HttpPost("login")]
@@ -45,7 +47,16 @@ public sealed class AuthController(
             return Unauthorized(new { message = "Invalid email or password." });
         }
 
-        return Ok(new { token = CreateToken(user), user = new UserResponse(user.Name, user.Email, user.Role) });
+        return Ok(new { token = CreateToken(user), user = new UserResponse(user.Id, user.Name, user.Email, user.Role) });
+    }
+
+    [HttpPost("seed")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Seed()
+    {
+        await usersService.SeedDefaultUsersAsync();
+        await booksService.SeedDefaultBooksAsync();
+        return Ok(new { message = "Database seeded successfully with default users and tutorial books." });
     }
 
     [HttpPost("users/{email}/promote")]
@@ -75,8 +86,8 @@ public sealed class AuthController(
     }
 }
 
-public sealed record RegisterRequest(string Name, string Email, string Password);
+public sealed record RegisterRequest(string Name, string Email, string Password, string? Role = "user");
 
 public sealed record LoginRequest(string Email, string Password);
 
-public sealed record UserResponse(string Name, string Email, string Role);
+public sealed record UserResponse(string? Id, string Name, string Email, string Role);
